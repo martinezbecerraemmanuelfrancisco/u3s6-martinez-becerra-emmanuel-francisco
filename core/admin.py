@@ -10,4 +10,4 @@ from .models import Servicio
 # ServicioAdmin: clase que personaliza cómo se ve Servicio en el panel
 class ServicioAdmin(admin.ModelAdmin):
     # list_display: los campos que aparecen como columnas en la lista
-    list_display = ('titulo', 'categoria')
+    list_display = ('titulo', 'categoria', 'precio')git remote -v
