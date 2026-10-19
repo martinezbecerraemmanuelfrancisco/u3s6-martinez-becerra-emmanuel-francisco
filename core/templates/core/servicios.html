@@ -1,57 +1,86 @@
 {# extends: el listado también usa el molde base.html (debe ser la primera etiqueta) #}
 {% extends 'core/base.html' %}
 
-{# block contenido: lo que va dentro del body de base.html #}
 {% block contenido %}
-  {# h1: título de la página #}
-  <h1 class="text-2xl font-bold mb-6">Servicios</h1>
-  {# enlace a la ruta con name="crear_servicio" (la registras en el paso 05) #}
-  <a href="{% url 'crear_servicio' %}" class="inline-block mb-4 bg-blue-600 text-white px-4 py-2 rounded-lg">+ Nuevo servicio</a>
-  {# table w-full: la tabla ocupa todo el ancho; border dibuja el contorno gris #}
-  <table class="w-full border border-slate-200 rounded-lg overflow-hidden">
-    {# thead: la fila de encabezados, con fondo gris claro #}
-    <thead class="bg-slate-100">
-      {# tr: la única fila del encabezado #}
-      <tr>
-        {# th: encabezado de la columna del nombre #}
-        <th class="text-left px-4 py-2">Servicio</th>
-        {# th: encabezado de la columna del precio #}
-        <th class="text-left px-4 py-2">Precio</th>
-        {# th: NUEVO, encabezado de la columna con los enlaces Editar / Eliminar #}
-        <th class="text-left px-4 py-2">Acciones</th>
-      {# cierra la fila del encabezado #}
-      </tr>
-    {# cierra el encabezado de la tabla #}
-    </thead>
-    {# tbody: el cuerpo de la tabla, donde van las filas de datos #}
-    <tbody>
-      {# for: repite la fila una vez por cada servicio de la lista #}
-      {% for servicio in servicios %}
-      {# tr: una fila por servicio; border-t dibuja la línea gris de arriba #}
-      <tr class="border-t border-slate-200">
-        {# td: celda con el título del servicio #}
-        <td class="px-4 py-2">{{ servicio.titulo }}</td>
-        {# td: celda con el precio; el $ es texto fijo antes del número #}
-        <td class="px-4 py-2">${{ servicio.precio }}</td>
-        {# td: celda de las acciones #}
-        <td class="px-4 py-2">
-          {# url 'editar_servicio' servicio.pk: arma la dirección /servicios/<id>/editar/ #}
-          <a href="{% url 'editar_servicio' servicio.pk %}" class="text-blue-600 underline">Editar</a>
-          {# url 'eliminar_servicio' servicio.pk: arma la dirección /servicios/<id>/eliminar/ #}
-          <a href="{% url 'eliminar_servicio' servicio.pk %}" class="text-red-600 underline ml-3">Eliminar</a>
-        {# cierra la celda de las acciones #}
-        </td>
-      {# cierra la fila de este servicio #}
-      </tr>
-      {# empty: lo que se muestra si la lista no tiene ningún servicio #}
-      {% empty %}
-      {# fila única con el aviso; colspan="3" la estira a lo ancho de las 3 columnas #}
-      <tr><td colspan="3" class="px-4 py-6 text-center text-slate-500">Todavía no hay servicios.</td></tr>
-      {# endfor: fin de la repetición #}
-      {% endfor %}
-    {# cierra el cuerpo de la tabla #}
-    </tbody>
-  {# cierra la tabla #}
-  </table>
-{# endblock: fin del bloque contenido #}
+
+<div class="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    
+    {# Encabezado con título moderno y botón destacado #}
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-10 gap-4">
+        <div>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                Catálogo de Servicios
+            </h1>
+            <p class="text-slate-500 mt-2">Gestiona los servicios que ofreces a tus clientes</p>
+        </div>
+        
+        {# Botón flotante con sombra y efecto hover #}
+        <a href="{% url 'crear_servicio' %}" class="group flex items-center gap-2 bg-slate-900 hover:bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg shadow-slate-900/20 hover:shadow-blue-600/40 transition-all duration-300 transform hover:-translate-y-1 font-semibold">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Nuevo Servicio
+        </a>
+    </div>
+
+    {# Contenedor de Filas: Apila los elementos verticalmente (uno debajo del otro) #}
+    <div class="flex flex-col gap-4">
+        
+        {% for servicio in servicios %}
+        {# Tarjeta horizontal #}
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            
+            {# Decoración de fondo #}
+            <div class="absolute -right-12 -top-12 w-32 h-32 bg-blue-50 rounded-full blur-3xl group-hover:bg-indigo-100 transition-colors duration-500"></div>
+
+            {# Título del servicio (Izquierda) #}
+            <div class="relative z-10 flex-1">
+                <span class="inline-block px-3 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded-full mb-1.5 uppercase tracking-wider">
+                    Servicio
+                </span>
+                <h2 class="text-xl font-bold text-slate-800 leading-tight">
+                    {{ servicio.titulo }}
+                </h2>
+            </div>
+
+            {# Precio (Centro/Derecha) #}
+            <div class="relative z-10 sm:text-right">
+                <p class="text-2xl font-black text-slate-900">
+                    <span class="text-sm text-slate-400 font-medium mr-1">$</span>{{ servicio.precio }}
+                </p>
+            </div>
+
+            {# Botones de Acción (Derecha) #}
+            <div class="relative z-10 flex gap-2 w-full sm:w-auto mt-2 sm:mt-0 pt-4 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+                <a href="{% url 'editar_servicio' servicio.pk %}" class="flex-1 sm:flex-none flex justify-center items-center gap-2 bg-slate-50 hover:bg-blue-50 text-blue-600 px-5 py-2.5 rounded-xl font-medium transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                    Editar
+                </a>
+                <a href="{% url 'eliminar_servicio' servicio.pk %}" class="flex-1 sm:flex-none flex justify-center items-center gap-2 bg-slate-50 hover:bg-red-50 text-red-500 hover:text-red-600 px-5 py-2.5 rounded-xl font-medium transition-colors text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                    Eliminar
+                </a>
+            </div>
+        </div>
+
+        {% empty %}
+        <div class="col-span-full">
+            <div class="bg-slate-50/50 border-2 border-dashed border-slate-300 rounded-3xl p-12 text-center flex flex-col items-center justify-center hover:border-blue-400 hover:bg-blue-50/30 transition-colors duration-300">
+                <div class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-700">Aún no hay servicios</h3>
+                <p class="text-slate-500 mt-2 mb-6 max-w-sm mx-auto">Comienza agregando tu primer servicio para que aparezca en tu catálogo.</p>
+                <a href="{% url 'crear_servicio' %}" class="bg-white border border-slate-200 text-slate-700 hover:text-blue-600 hover:border-blue-300 px-6 py-2.5 rounded-full font-medium shadow-sm transition-all">
+                    Agregar mi primer servicio
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
 {% endblock %}
